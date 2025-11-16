@@ -1,6 +1,10 @@
+
+import java.util.List;
+
 final class Student extends User{
     private int StudentID;
     private String University;
+    private List<Booking> Bookings;
 
     public Student(String UserID, String Name, String Email, int StudentID, String University){
         super(UserID, Name, Email);
