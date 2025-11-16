@@ -4,6 +4,11 @@ public class User{
     private String Email;
 
     //constructor
+    public User(String UserID, String Name, String Email){
+        setUserID(UserID);
+        setName(Name);
+        setEmail(Email);
+    }
 
     //getters
     public String getUserID(){
