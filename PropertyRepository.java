@@ -30,7 +30,7 @@ public class PropertyRepository{
                     if((start != null && end != null) && !(room.checkAvailability(start, end))){
                         returnRoom = false;
                     }
-                    if(pricePerWeek != null && pricePerWeek > room.getPricePerWeek()){
+                    if(pricePerWeek != null && pricePerWeek < room.getPricePerWeek()){
                         returnRoom = false;
                     }
                     if(returnRoom){
