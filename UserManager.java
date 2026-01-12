@@ -6,24 +6,21 @@ public class UserManager{
         this.userRepo = userRepo;
     }
 
-    //user attempts login, if it's in repo return true else return false
-    public Boolean login(String username, String password){
-        if(userRepo.userIDInRepo(username)){
-            User loginUser = userRepo.getUser(username);
-
-            if(loginUser.getPassword().equals(password)){
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            return false;
+    //user attempts login, if it's in repo and the password is correct return the user object, else exception errors
+    public User login(String username, String password){
+        User user = userRepo.userEmailInRepo(username);
+        if(user == null){
+            throw new IllegalArgumentException("user does not exist");
         }
+        if(!user.getPassword().equals(password)){
+            throw new IllegalArgumentException("password incorrect");
+        }
+        return user;
     }
 
     //allows a user to sign up to the service, checking that the email suppplied isn't already used.
     public void signUp(String usertype, String name, String email, String password){
-        if(!userRepo.userEmailInRepo(email)){
+        if(userRepo.userEmailInRepo(email) == null){
             switch(usertype.toLowerCase()){
                 case "homeowner":
                     addNewHomeOwner(name, email, password);
@@ -32,6 +29,24 @@ public class UserManager{
                 case "admin":
                     addNewAdmin(name, email, password);
             }
+        }else{
+            throw new IllegalArgumentException("ERROR: email already exists");
+        }
+    }
+
+    public void emailValidator(String email){
+        if(email == null || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")){ //regex that enforces email format, not starting in @, containing an @ and a . for .com, .co.uk etc.
+            throw new IllegalArgumentException("ERROR: email formatting incorrect");
+        }
+    }
+    public void nameValidator(String name){
+        if(name == null || !name.matches("^[A-Za-z]+ [A-Za-z]+$")){
+            throw new IllegalArgumentException("ERROR: name format incorrect");
+        }
+    }
+    public void passwordValidator(String password){
+        if(password == null || password.length() > 6){
+            throw new IllegalArgumentException("ERROR: password must be over 6 characters");
         }
     }
 
@@ -52,7 +67,7 @@ public class UserManager{
     }
     //delete a user
     public void deleteUserByID(String userID){
-        if(userRepo.userIDInRepo(userID)){
+        if(userRepo.userIDInRepo(userID)!= null){
             userRepo.deleteUser(userID);
         }
     }

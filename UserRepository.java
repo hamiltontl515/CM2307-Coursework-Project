@@ -22,19 +22,18 @@ public class UserRepository{
     public void deleteUser(String userID){
         UsersID.remove(userID);
     }
-    public Boolean userIDInRepo(String userID){
-        return UsersID.containsKey(userID);
+    public User userIDInRepo(String userID){
+        return UsersID.get(userID);
     }
 
     //iterates through repo checking for the presence of a specific email, all users must have different emails
-    public Boolean userEmailInRepo(String userEmail){
-        Boolean isIn = false;
+    public User userEmailInRepo(String userEmail){
         for(User user: UsersID.values()){
-            if(user.getEmail() != null){
-                isIn = true;
+            if(user.getEmail().equals(userEmail)){
+                return user;
             }
         }
-        return isIn;
+        return null;
     }
 
     public User getUser(String UserID){
