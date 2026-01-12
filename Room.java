@@ -1,3 +1,4 @@
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -56,6 +57,11 @@ public class Room{
         }else{
             System.out.println("unfortunately, room is already booked, try other dates or another room.");
         }
+    }
+
+    public void displayRoom(){
+        System.out.println("Room description:"+roomDescription);
+        System.out.println("Room Price:£"+ pricePerWeek);
     }
 
 

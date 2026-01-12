@@ -1,5 +1,5 @@
-import java.util.*;
 import java.time.LocalDate;
+import java.util.*;
 
 public class PropertyRepository{
     private HashMap<String, Property> propertiesID = new HashMap<>();
@@ -10,6 +10,36 @@ public class PropertyRepository{
 
     public Property getPropertyByID(String propertyID){
         return propertiesID.get(propertyID);
+    }
+
+    public List<Property> getAllProperties(){
+        List<Property> allProperties = new ArrayList<>();
+
+        for(Property property: propertiesID.values()){
+            allProperties.add(property);
+        }
+        return allProperties;
+    }
+
+    public Boolean isUniIn(String university){
+        for(Property property: propertiesID.values()){
+            if(property.getUniversity().equalsIgnoreCase(university)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public List<String> getCurrentValidUnis(){
+        List<String> validUnis = new ArrayList<>();
+
+        for(Property property: propertiesID.values()){
+            if(!validUnis.contains(property.getUniversity())){
+                validUnis.add(property.getUniversity());
+            }
+        }
+
+        return validUnis;
     }
 
     public List<Room> roomSearch(String university, LocalDate start, LocalDate end, Double pricePerWeek){
