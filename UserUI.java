@@ -3,10 +3,19 @@ import java.util.*;
 public class UserUI{
     private UserManager userManager;
     private Scanner scanner;
+    private PropertyManager propertyManager;
+    private RentalRequestManager rentalRequestManager;
+    private RentalAgreementManager rentalAgreementManager;
+    private StudentMenu studentMenu;
 
-    public UserUI(UserManager userManager, Scanner scanner){
+
+    public UserUI(UserManager userManager, Scanner scanner, PropertyManager propertyManager, RentalRequestManager rentalRequestManager, RentalAgreementManager rentalAgreementManager){
         this.userManager = userManager;
         this.scanner = scanner;
+        this.propertyManager = propertyManager;
+        this.rentalRequestManager = rentalRequestManager;
+        this.rentalAgreementManager = rentalAgreementManager;
+        this.studentMenu = new StudentMenu(scanner, propertyManager, rentalRequestManager, rentalAgreementManager);
     }
 
     public static void displayUserMenu(){
@@ -22,7 +31,7 @@ public class UserUI{
         System.out.println("==============================");
 
     }
-    public void logIn(){
+    public User logIn(){
         lineBr();
         System.out.println("------------LOG IN------------");
         System.out.print("Enter your email:");
@@ -30,26 +39,8 @@ public class UserUI{
         scanner.nextLine();
         System.out.print("Enter your password");
         String password = scanner.next();
-        
-        try {
-            User user = userManager.login(email, password);
 
-            if (user instanceof Student) {
-                //open up student menu            
-                System.out.println("student menu goes here");
-            }else if (user instanceof HomeOwner) {
-                //open up homeowner menu
-                System.out.println("homeowner menu goes here");
-
-            }else if (user instanceof Admin){
-                //open up admin menu
-                System.out.println("admin menu goes here");
-            }else{
-                System.out.println("how have u ended up here");
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        return userManager.login(email, password);
     }
 
     public void signUp(){
@@ -60,6 +51,7 @@ public class UserUI{
         while(true){
             System.out.print("please press 1 to sign up as a student, 2 to sign up as a homeowner:");
             type = scanner.nextInt();
+            scanner.nextLine();
             if(type == 1 || type == 2){
                 break;
             }else{
@@ -119,23 +111,31 @@ public class UserUI{
     }
 
     public void start(){
-        displayUserMenu();
-
-        int forwardTo;
-        while(true){
+        while (true) { 
+            displayUserMenu();
             try {
-                forwardTo = scanner.nextInt();
+                int forwardTo = scanner.nextInt();
+                
                 if(forwardTo == 1){
-                    logIn();
-                    start();
-                }else if(forwardTo == 2){
+                    User user = logIn();
+
+                    if (user instanceof Student) {
+                        studentMenu.start((Student) user);
+                    }else if(user instanceof HomeOwner){
+                        //start homeowner menu
+                    }else if(user instanceof Admin){
+                        //start admin menu
+                    }
+                } else if(forwardTo ==2){
                     signUp();
-                    start();
-                }else{
+                } else if(forwardTo == 3){
+                    System.out.println("thank for using student rentals!");
                     break;
                 }
-            }catch(IllegalArgumentException e){
-                System.out.println("ERROR: enter a valid number");
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: invalid number");
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
     }

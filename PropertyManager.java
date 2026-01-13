@@ -4,27 +4,29 @@ import java.time.LocalDate;
 public class PropertyManager{
     private PropertyRepository propertyRepo;
 
+    public PropertyManager(PropertyRepository propertyRepository){
+        this.propertyRepo = propertyRepository;
+    }
 
     public Property getProperty(String propertyID){
         return propertyRepo.getPropertyByID(propertyID);
     }
 
     public String getPropertyIDByRoomID(String roomID){
-        return propertyRepo.getPropertyByID(roomID).getPropertyId();
+        return propertyRepo.getPropertyByRoom(roomID).getPropertyId();
     }
 
     public List<Room> roomSearch(String university, LocalDate start, LocalDate end, Double pricePerWeek){
 
         List<Room> searchResult = new ArrayList<>();
 
-        Boolean searchUniveristy = true;
-
         for(Property property: propertyRepo.getAllProperties()){
-            if(university != null && property.getUniversity() != university){
-                searchUniveristy = false;
+            boolean matches = true;
+            if(university != null && !property.getUniversity().equalsIgnoreCase(university)){
+                matches = false;
             }
 
-            if(searchUniveristy){
+            if(matches){
                 for(Room room: property.getRooms()){
                     Boolean returnRoom = true;
 
@@ -44,6 +46,9 @@ public class PropertyManager{
     }
 
     public List<String> validUnis(){
+        if (propertyRepo == null) {
+            throw new IllegalStateException("PropertyRepository not initialised");
+        }
         return propertyRepo.getCurrentValidUnis();
     }
 

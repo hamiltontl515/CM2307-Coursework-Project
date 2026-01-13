@@ -1,3 +1,4 @@
+
 public abstract class User{
     protected String UserID;
     protected String Name;
@@ -21,6 +22,9 @@ public abstract class User{
     }
     public String getEmail(){
         return Email;
+    }
+    public String getPassword(){
+        return Password;
     }
 
     //setters

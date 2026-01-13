@@ -5,6 +5,14 @@ public class RentalRequestRepository{
     private HashMap<String, RentalRequest> requestsID = new HashMap<>();
     private int repositoryIndex;
 
+    public RentalRequestRepository(){
+        this.repositoryIndex =0;
+    }
+
+    public void setRepositoryIndex(int index){
+        repositoryIndex = index;
+    }
+
     public void addRequest(RentalRequest newRequest){
         requestsID.put(newRequest.getRequestID(), newRequest);
         repositoryIndex =0;
@@ -38,5 +46,9 @@ public class RentalRequestRepository{
         }
 
         return returnRequests;
+    }
+
+    public void requestCount(){
+        System.out.println(requestsID.size());
     }
 }

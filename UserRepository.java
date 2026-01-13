@@ -8,6 +8,10 @@ public class UserRepository{
         this.IDIndex = 0;
     }
 
+    public void setRepositoryIndex(int index){
+        IDIndex = index;
+    }
+
     public String generateUserID(){
         String paddedNum = String.format("%3d", IDIndex);
         IDIndex ++;
@@ -38,5 +42,9 @@ public class UserRepository{
 
     public User getUser(String UserID){
         return UsersID.get(UserID);
+    }
+
+    public void userCount(){
+        System.out.println(UsersID.size());
     }
 }

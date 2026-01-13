@@ -3,6 +3,14 @@ import java.util.*;
 
 public class PropertyRepository{
     private HashMap<String, Property> propertiesID = new HashMap<>();
+    private int repositoryIndex;
+
+    public PropertyRepository(){
+        this.repositoryIndex =0;
+    }
+    public void setRepositoryIndex(int index){
+        repositoryIndex = index;
+    }
 
     public void addProperty(Property newProperty){
         propertiesID.put(newProperty.getPropertyId(), newProperty);
@@ -94,5 +102,9 @@ public class PropertyRepository{
             }
         }
         return searchResult;
+    }
+
+    public void propertyCount(){
+        System.out.println(propertiesID.size());
     }
 }
