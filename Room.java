@@ -55,11 +55,12 @@ public class Room{
         if(checkAvailability(start, end)){
             bookings.add(new BookingSlot(start, end));
         }else{
-            System.out.println("unfortunately, room is already booked, try other dates or another room.");
+            throw new IllegalArgumentException("ERROR: unfortunately, room is already booked, try other dates or another room.");
         }
     }
 
     public void displayRoom(){
+        System.out.println("Room ID:"+roomID);
         System.out.println("Room description:"+roomDescription);
         System.out.println("Room Price:£"+ pricePerWeek);
     }

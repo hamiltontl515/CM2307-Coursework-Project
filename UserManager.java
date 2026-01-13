@@ -24,10 +24,15 @@ public class UserManager{
             switch(usertype.toLowerCase()){
                 case "homeowner":
                     addNewHomeOwner(name, email, password);
+                    break;
                 case "student":
                     addNewStudent(name, email, password);
+                    break;
                 case "admin":
                     addNewAdmin(name, email, password);
+                    break;
+                default:
+                    throw new IllegalArgumentException("user type non existant");
             }
         }else{
             throw new IllegalArgumentException("ERROR: email already exists");
@@ -45,7 +50,7 @@ public class UserManager{
         }
     }
     public void passwordValidator(String password){
-        if(password == null || password.length() > 6){
+        if(password == null || password.length() < 6){
             throw new IllegalArgumentException("ERROR: password must be over 6 characters");
         }
     }
@@ -57,7 +62,7 @@ public class UserManager{
     }
     //create a student
     public void addNewStudent(String name, String email, String password){
-        User newStudent = UserFactory.createUser("student", userRepo.generateUserID(), name, name, password);
+        User newStudent = UserFactory.createUser("student", userRepo.generateUserID(), name, email, password);
         userRepo.AddUser(newStudent);
     }
     //create an admin

@@ -29,6 +29,30 @@ public class PropertyRepository{
         }
         return false;
     }
+
+    public Boolean isRoomIn(String RoomID){
+        Boolean isIn = false;
+        for(Property property: propertiesID.values()){
+            for(Room room: property.getRooms()){
+                if(room.getRoomID().equalsIgnoreCase(RoomID)){
+                    isIn = true;
+                    break;
+                }
+            }
+        }
+        return isIn;
+    }
+
+    public Property getPropertyByRoom(String roomID){
+        for(Property property: propertiesID.values()){
+            for(Room room: property.getRooms()){
+                if(room.getRoomID().equals(roomID)){
+                    return property;
+                }
+            }
+        }
+        return null;
+    }
     
     public List<String> getCurrentValidUnis(){
         List<String> validUnis = new ArrayList<>();

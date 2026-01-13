@@ -32,6 +32,14 @@ public class Property{
     public List<Room> getRooms(){
         return this.rooms;
     }
+    public Room getRoom(String roomID){
+        for(Room room: rooms){
+            if(room.getRoomID().equals(roomID)){
+                return room;
+            }
+        }
+        return null; 
+    }
 
     //setters
     public void setPropertyID(String newPropertyID){

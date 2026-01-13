@@ -1,3 +1,4 @@
+
 import java.time.LocalDate;
 
 public class BookingSlot{
@@ -27,5 +28,9 @@ public class BookingSlot{
     //method to check if another booking slot if overlapping with its own start/end dates, returns true if overlap occurs
     public Boolean checkOverlap(LocalDate otherStartDate, LocalDate otherEndDate){
         return !(otherEndDate.isBefore(startDate)|| otherStartDate.isAfter(endDate));
+    }
+
+    public String bookingSlotString(){
+        return "From:"+startDate+"to:"+endDate;
     }
 }

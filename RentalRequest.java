@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.time.LocalDate;
 
@@ -61,6 +62,14 @@ public class RentalRequest{
         }else{
             System.out.println("Request status already accepted/denied");
         }
+    }
+
+
+    public void displayRequest(){
+        System.out.println("Request ID:"+ requestID);
+        System.out.println("Request Room ID:" + requestRoom.getRoomID());
+        System.out.println("Request slot:" + requestSlot.bookingSlotString());
+        System.out.println("Request status:" + requestStatus);
     }
 
 }
