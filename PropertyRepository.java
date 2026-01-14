@@ -3,13 +3,43 @@ import java.util.*;
 
 public class PropertyRepository{
     private HashMap<String, Property> propertiesID = new HashMap<>();
-    private int repositoryIndex;
+    private int propertyIndex;
+    private int roomIndex;
 
     public PropertyRepository(){
-        this.repositoryIndex =0;
+        this.propertyIndex =0;
+        this.roomIndex =0;
     }
-    public void setRepositoryIndex(int index){
-        repositoryIndex = index;
+    public void setPropertyIndex(int index){
+        propertyIndex = index;
+    }
+    public void setRoomIndex(int index){
+        roomIndex = index;
+    }
+    public void addRoomToProperty(String propertyID, String description, Double price, List<BookingSlot> bookings){
+        Property property = getPropertyByID(propertyID);
+
+        Room newRoom = new Room(generateRoomID(), description, price);
+        if(!bookings.isEmpty()){
+            for(BookingSlot booking: bookings){
+                LocalDate start = booking.getStartDate();
+                LocalDate end = booking.getEndDate();
+                newRoom.addBooking(start, end);
+            }
+        }
+
+        property.addRoom(newRoom);
+    }
+
+    public String generatePropertyID(){
+        String paddedNum = String.format("%3d", propertyIndex);
+        propertyIndex ++;
+        return "P".concat(paddedNum);
+    }
+    public String generateRoomID(){
+        String paddedNum = String.format("%3d", roomIndex);
+        roomIndex++;
+        return "Ro".concat(paddedNum);
     }
 
     public void addProperty(Property newProperty){
@@ -60,6 +90,16 @@ public class PropertyRepository{
             }
         }
         return null;
+    }
+    
+    public List<String> propertyIdsByHomeOwnerID(String id){
+        List<String> propertyIds = new ArrayList<>();
+        for(Property property: propertiesID.values()){
+            if(property.getOwner().equals(id)){
+                propertyIds.add(property.getPropertyId());
+            }
+        }
+        return propertyIds;
     }
     
     public List<String> getCurrentValidUnis(){

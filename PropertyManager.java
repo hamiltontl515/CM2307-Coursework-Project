@@ -1,5 +1,6 @@
 import java.util.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class PropertyManager{
     private PropertyRepository propertyRepo;
@@ -14,6 +15,21 @@ public class PropertyManager{
 
     public String getPropertyIDByRoomID(String roomID){
         return propertyRepo.getPropertyByRoom(roomID).getPropertyId();
+    }
+
+    public List<String> propertyIdsByHomeownerID(String homeOwnerID){
+        return propertyRepo.propertyIdsByHomeOwnerID(homeOwnerID);
+    }
+
+    public void displayHomeownersPropertyIDs(String ownerID){
+        List<String> homeOwnersProperties = propertyRepo.propertyIdsByHomeOwnerID(ownerID);
+        if(!homeOwnersProperties.isEmpty()){
+            for(String id : homeOwnersProperties){
+                System.out.println("ID:" + id);
+            }
+        }else{
+            throw new IllegalArgumentException("EROR: you have no properties");
+        }
     }
 
     public List<Room> roomSearch(String university, LocalDate start, LocalDate end, Double pricePerWeek){
@@ -62,5 +78,43 @@ public class PropertyManager{
         if(!propertyRepo.isUniIn(university)){
             throw new IllegalArgumentException("ERROR: no homes exist in this university yet");
         }
+    }
+    public String addPropertyAndReturnID(String address, String university, String owner){
+        String propertyID = propertyRepo.generatePropertyID();
+        Property newProperty = new Property(propertyID, address, university, owner);
+        propertyRepo.addProperty(newProperty);
+        return propertyID;
+    }
+    public void addRoomToProperty(String propertyID, String description, Double price, List<BookingSlot> bookings){
+        propertyRepo.addRoomToProperty(propertyID, description, price, bookings);
+    }
+
+    public void validateRoomDescription(String description){
+        if(description.length()>200){
+            throw new IllegalArgumentException("ERROR: entered description is too long.");
+        }
+    }
+
+    public void validateRoomPrice(String price){
+        String priceRegex = "^\\d+\\.\\d{2}$";
+
+        if(!price.matches(priceRegex)){
+            throw new IllegalArgumentException("ERROR: price entered is in wrong format.");
+        }
+    }
+    public void validateDate(String date){
+        String dateRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
+
+        if(!date.matches(dateRegex)){
+            throw new IllegalArgumentException("ERROR: date format incorrect");
+        }
+    }
+    public LocalDate stringToDate(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        return LocalDate.parse(date, formatter);
+    }
+    public Double stringToPrice(String price){
+        return Double.parseDouble(price);
     }
 }

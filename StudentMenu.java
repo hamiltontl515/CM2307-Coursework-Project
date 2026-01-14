@@ -16,7 +16,7 @@ public class StudentMenu{
 
     }
 
-    public static void lineBr(){
+    public void lineBr(){
         System.out.println("==============================");
         System.out.println("==============================");
 

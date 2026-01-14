@@ -33,4 +33,5 @@ public class BookingSlot{
     public String bookingSlotString(){
         return "From:"+startDate+"to:"+endDate;
     }
+
 }

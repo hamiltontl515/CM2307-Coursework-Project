@@ -7,6 +7,7 @@ public class UserUI{
     private RentalRequestManager rentalRequestManager;
     private RentalAgreementManager rentalAgreementManager;
     private StudentMenu studentMenu;
+    private HomeOwnerMenu homeOwnerMenu;
 
 
     public UserUI(UserManager userManager, Scanner scanner, PropertyManager propertyManager, RentalRequestManager rentalRequestManager, RentalAgreementManager rentalAgreementManager){
@@ -16,6 +17,7 @@ public class UserUI{
         this.rentalRequestManager = rentalRequestManager;
         this.rentalAgreementManager = rentalAgreementManager;
         this.studentMenu = new StudentMenu(scanner, propertyManager, rentalRequestManager, rentalAgreementManager);
+        this.homeOwnerMenu = new HomeOwnerMenu(scanner, propertyManager, rentalRequestManager, rentalAgreementManager);
     }
 
     public static void displayUserMenu(){
@@ -123,6 +125,7 @@ public class UserUI{
                         studentMenu.start((Student) user);
                     }else if(user instanceof HomeOwner){
                         //start homeowner menu
+                        homeOwnerMenu.start((HomeOwner) user);
                     }else if(user instanceof Admin){
                         //start admin menu
                     }

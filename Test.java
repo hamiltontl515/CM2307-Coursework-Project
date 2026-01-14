@@ -45,7 +45,7 @@ public class Test{
         proprepo.addProperty(property2);
         proprepo.addProperty(property3);
         proprepo.addProperty(property4);
-        proprepo.setRepositoryIndex(5);
+        proprepo.setPropertyIndex(5);
 
         /*
 
