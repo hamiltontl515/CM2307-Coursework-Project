@@ -22,14 +22,15 @@ public class StudentMenu{
 
     }
 
-    public void displayUserMenu(){
+    public String studentMenu(){
         lineBr();
-        System.out.println("--welcome to the student menu-");
+        /*System.out.println("--welcome to the student menu-");
         System.out.println("press 1 to search rooms");
         System.out.println("press 2 to look at rental requests");
         System.out.println("press 3 to make a rental request");
         System.out.println("press 4 to look at rental agreements");
-        System.out.println("press 5 to log out");
+        System.out.println("press 5 to log out");*/
+        return "--welcome to the student menu-\npress 1 to search rooms\npress 2 to look at rental requests\npress 3 to make a rental request\npress 4 to look at rental agreements\npress 5 to log out";
     }
 
     public void searchRooms(){
@@ -66,15 +67,15 @@ public class StudentMenu{
         int dateDecision;
         String startDate;
         String endDate;
-        LocalDate start;
-        LocalDate end;
+        LocalDate start = null;
+        LocalDate end = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String dateRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
-        while (true) { 
-            System.out.println("if you dont wish your search to include dates press 1, otherwise press 2:");
+        Boolean carryOn = false;
+        while (!carryOn) { 
+            //System.out.println("if you dont wish your search to include dates press 1, otherwise press 2:");
             try {
-                dateDecision = scanner.nextInt();
-                scanner.nextLine();
+                dateDecision = readInt("if you dont wish your search to include dates press 1, otherwise press 2:");
                 if(dateDecision==1){
                     start = null;
                     end = null;
@@ -91,7 +92,14 @@ public class StudentMenu{
                             try {
                                 regexChecker(endDate, dateRegex);
                                 end = LocalDate.parse(endDate, formatter);
-                                break;
+                                if(end.isBefore(start)){
+                                    System.out.println("ERROR: end date must be after start date");
+                                    //break;
+                                }else{
+                                    carryOn = true;
+                                    break;
+                                }
+                                //break;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
                             }
@@ -99,7 +107,7 @@ public class StudentMenu{
                             System.out.println(e.getMessage());
                         }
                     }
-                    break;
+                    //break;
                 }
             } catch (Exception e) {
                 System.out.println("ERROR: enter either 1 or 2");
@@ -111,10 +119,9 @@ public class StudentMenu{
         Double price;
         String priceRegex = "^\\d+\\.\\d{2}$";
         while(true){
-            System.out.println("If you do not wish to enter a price budget (per week), press 1, if not press 2");
+            //System.out.println("If you do not wish to enter a price budget (per week), press 1, if not press 2");
             try {
-                priceDecision = scanner.nextInt();
-                scanner.nextLine();
+                priceDecision = readInt("If you do not wish to enter a price budget (per week), press 1, if not press 2");
                 if(priceDecision == 1){
                     price = null;
                     break;
@@ -210,6 +217,10 @@ public class StudentMenu{
                 try {
                     regexChecker(endDate, dateRegex);
                     end = LocalDate.parse(endDate, formatter);
+                    if(end.isBefore(start)){
+                        System.out.println("ERROR: end date must be after start date");
+                        break;
+                    }
                     if(proposedRoom.checkAvailability(start, end)){
                         //make request
                         rentalRequestManager.createRequest(student, proposedRoom, start, end);
@@ -246,11 +257,10 @@ public class StudentMenu{
         Boolean runStart = true;
         while(runStart){
             lineBr();
-            displayUserMenu();
+            //System.out.println(studentMenu());
             int menuDecision;
             try {
-                menuDecision = scanner.nextInt();
-                scanner.nextLine();
+                menuDecision = readInt(studentMenu());
                 if(menuDecision == 1){
                     searchRooms();
                 }else if(menuDecision == 2){
@@ -264,8 +274,8 @@ public class StudentMenu{
                     runStart = false;
                 }
             } catch (Exception e) {
-                //System.out.println("ERROR: please input a valid option.");
-                e.printStackTrace();
+                System.out.println("ERROR: please input a valid option.");
+                //e.printStackTrace();
             }
         }
     }
@@ -274,4 +284,17 @@ public class StudentMenu{
             throw new IllegalArgumentException("EROR: wrong date format");
         }
     }
+    public int readInt(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: please enter a valid whole number.");
+            }
+    }
+}
+
 }

@@ -15,7 +15,7 @@ public class RentalAgreementRepository{
         agreementsID.put(newRentalAgreement.getRentalAgreementID(), newRentalAgreement);
     }
     public String generateAgreementID(){
-        String paddedNum = String.format("%3d", agreementIndex);
+        String paddedNum = String.format("%03d", agreementIndex);
         agreementIndex ++;
         return "A".concat(paddedNum);
     }
@@ -23,7 +23,16 @@ public class RentalAgreementRepository{
     public List<RentalAgreement> agreementByStudent(String userID){
         List<RentalAgreement> returnAgreements = new ArrayList<>();
         for(RentalAgreement agreement: agreementsID.values()){
-            if(agreement.getRentalAgreemStudent().getUserID().equals(userID)){
+            if(agreement.getRentalAgreementStudent().getUserID().equals(userID)){
+                returnAgreements.add(agreement);
+            }
+        }
+        return returnAgreements;
+    }
+    public List<RentalAgreement> agreementByHomeOwner(String userID){
+        List<RentalAgreement> returnAgreements = new ArrayList<>();
+        for(RentalAgreement agreement: agreementsID.values()){
+            if(agreement.getRentalAgreementHomeOwner().getUserID().equals(userID)){
                 returnAgreements.add(agreement);
             }
         }

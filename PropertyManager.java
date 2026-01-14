@@ -34,7 +34,7 @@ public class PropertyManager{
                 }
             }
         }
-        return propertyIDs;
+        return roomIDs;
     }
 
     public void displayHomeownersPropertyIDs(String ownerID){

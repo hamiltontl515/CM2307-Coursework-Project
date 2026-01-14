@@ -13,7 +13,7 @@ public class UserRepository{
     }
 
     public String generateUserID(){
-        String paddedNum = String.format("%3d", IDIndex);
+        String paddedNum = String.format("%03d", IDIndex);
         IDIndex ++;
         return "U".concat(paddedNum);
 

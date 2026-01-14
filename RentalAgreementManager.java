@@ -15,4 +15,8 @@ public class RentalAgreementManager{
     public List<RentalAgreement> agreementByStudent(String studentID){
         return rentalAgreementRepository.agreementByStudent(studentID);
     }
+
+    public List<RentalAgreement> agreementByHomeOwner(String userID){
+        return rentalAgreementRepository.agreementByHomeOwner(userID);
+    }
 }

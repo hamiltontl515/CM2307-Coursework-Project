@@ -1,6 +1,4 @@
 
-import java.util.*;
-import java.time.LocalTime;
 
 public class RentalAgreement{
     private String agreementID;
@@ -23,7 +21,7 @@ public class RentalAgreement{
     public HomeOwner getRentalAgreementHomeOwner(){
         return agreementHomeOwner;
     }
-    public Student getRentalAgreemStudent(){
+    public Student getRentalAgreementStudent(){
         return agreementStudent;
     }
     public BookingSlot getRentalAgreementBookingSlot(){

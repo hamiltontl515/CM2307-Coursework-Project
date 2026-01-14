@@ -20,15 +20,17 @@ public class HomeOwnerMenu{
 
     }
 
-    public void displayHomeOwnerOptions(){
-        lineBr();
+    public String homeOwnerOptions(){
+        /*lineBr();
         System.out.println("--------homeowner menu--------");
         System.out.println("press 1 to add a property");
         System.out.println("press 2 to add a room to a property");
         System.out.println("press 3 to view rental requests");
         System.out.println("press 4 to manage a rental request");
         System.out.println("press 5 to view rental agreements");
-        System.out.println("press 6 to log out");
+        System.out.println("press 6 to log out");*/
+
+        return "--------homeowner menu--------\npress 1 to add a property\npress 2 to add a room to a property\npress 3 to view rental requests\npress 4 to manage a rental request\npress 5 to view rental agreements\npress 6 to log out";
 
     }
     public void addProperty(HomeOwner homeOwner){
@@ -56,9 +58,9 @@ public class HomeOwnerMenu{
                 }else{
                     String PropertyID = propertyManager.addPropertyAndReturnID(address, university, homeOwner.getUserID());
                     int roomDecision;
-                    System.out.println("would you like to add rooms to your property?enter 1 for yes, 2 for no");
+                    //System.out.println("would you like to add rooms to your property?enter 1 for yes, 2 for no");
                     try {
-                        roomDecision = scanner.nextInt();
+                        roomDecision = readInt("would you like to add rooms to your property?enter 1 for yes, 2 for no");
                         scanner.nextLine();
                         if(roomDecision == 1){
                             //go to add room to property method
@@ -127,11 +129,11 @@ public class HomeOwnerMenu{
 
                             int anyPreBooked;
                             List<BookingSlot> preBookings = new ArrayList<>();
-                            System.out.println("would you like to add any pre booked slots? 1 for yes, 2 for no.");
+                            //System.out.println("would you like to add any pre booked slots? 1 for yes, 2 for no.");
 
                             while (true) { 
                                 try {
-                                    anyPreBooked = scanner.nextInt();
+                                    anyPreBooked = readInt("would you like to add any pre booked slots? 1 for yes, 2 for no.");
                                     scanner.nextLine();
                                     if(anyPreBooked == 1){
                                         getPreBookings(preBookings);
@@ -162,10 +164,9 @@ public class HomeOwnerMenu{
 
             int anotherRoom;
             while(true){
-                System.out.println("would you like to add another room to this property? enter 1 for yes, 2 for no");
+                //System.out.println("would you like to add another room to this property? enter 1 for yes, 2 for no");
                 try {
-                    anotherRoom = scanner.nextInt();
-                    scanner.nextLine();
+                    anotherRoom = readInt("would you like to add another room to this property? enter 1 for yes, 2 for no");
                     if(anotherRoom == 1){
                         break;
                     }else if(anotherRoom == 2){
@@ -200,6 +201,10 @@ public class HomeOwnerMenu{
                     try {
                         propertyManager.validateDate(endDate);
                         end = propertyManager.stringToDate(endDate);
+                        if(end.isBefore(start)){
+                            System.out.println("ERROR: end date must be after start date.");
+                            break;
+                        }
                         BookingSlot booking = new BookingSlot(start, end);
                         preBooked.add(booking);
                         break;
@@ -213,10 +218,10 @@ public class HomeOwnerMenu{
             }
 
             int another;
-            System.out.println("would you like to add another booking? 1 for yes, 2 for no");
+            //System.out.println("would you like to add another booking? 1 for yes, 2 for no");
             while (true) { 
                 try {
-                    another = scanner.nextInt();
+                    another = readInt("would you like to add another booking? 1 for yes, 2 for no");
                     if(another == 1){
                         break;
                     }else if(another == 2){
@@ -269,32 +274,33 @@ public class HomeOwnerMenu{
         }
         
         List<RentalRequest> ownersRoomsRequests = rentalRequestManager.anyRequests(ownersRooms);
+
         if(ownersRoomsRequests.isEmpty()){
             System.out.println("ERROR: your property rooms have no rental requests");
             return;
         }
         //takes away any accepted or denied requests
-        rentalRequestManager.onlyPendingRequests(ownersRoomsRequests);
+        //rentalRequestManager.onlyPendingRequests(ownersRoomsRequests);
+        ownersRoomsRequests = rentalRequestManager.onlyPendingRequests(ownersRoomsRequests);
         
         //list of visitied rooms
         List<String> visitedRooms = new ArrayList<>();
 
-        for(int i=0;i>ownersRoomsRequests.size();i++){
-            if(visitedRooms.contains(ownersRoomsRequests.get(i).getRequestRoom().getRoomID())){
-                return;
-            }
+        for(int i=0;i<ownersRoomsRequests.size();i++){
             String visitingRoom = ownersRoomsRequests.get(i).getRequestRoom().getRoomID();
+            if(visitedRooms.contains(visitingRoom)){
+                continue;
+            }
+            //String visitingRoom = ownersRoomsRequests.get(i).getRequestRoom().getRoomID();
             visitedRooms.add(visitingRoom);
 
-            List<RentalRequest> ownersRoomsCopy = ownersRoomsRequests;
+            //List<RentalRequest> ownersRoomsCopy = ownersRoomsRequests;
+            List<RentalRequest> ownersRoomsCopy = new ArrayList<>(ownersRoomsRequests);
 
             List<RentalRequest> requestsSameRoom = rentalRequestManager.stripOfOtherRoomIds(ownersRoomsCopy, visitingRoom);
             
             manageRequestsByRoom(requestsSameRoom, visitingRoom, owner);
         }
-        //present options and get inout
-        //validate input
-        // action: accept/deny
     }
     public void manageRequestsByRoom(List<RentalRequest> requests, String visitingRoom, HomeOwner owner){
         System.out.println("requests on room:"+ visitingRoom);
@@ -309,10 +315,11 @@ public class HomeOwnerMenu{
                 rentalRequestManager.validateRequestID(requests, manageID);
 
                 int requestAction;
+                //String requestActionString;
                 while (true) { 
-                    System.out.println("enter 1 to accpet request, 2 to deny request, 3 to cancel");
+                    //System.out.println("enter 1 to accpet request, 2 to deny request, 3 to cancel");
                     try {
-                        requestAction = scanner.nextInt();
+                        requestAction = readInt("enter 1 to accpet request, 2 to deny request, 3 to cancel");
                         if(requestAction == 1){
                             //accept request
                             RentalRequest acceptedRequest = rentalRequestManager.getRequest(manageID);
@@ -327,38 +334,65 @@ public class HomeOwnerMenu{
                                     }
                                 }
                             }
+                            System.out.println("SUCCESS: request accepted.");
+                            return;
                         }else if(requestAction == 2){
                             //deny request
                             rentalRequestManager.denyRequest(manageID);
+                            System.out.println("SUCCESS: request denied.");
+                            return;
                         }else if(requestAction == 3){
                             break;
                         }else{
                             System.out.println("ERROR: Enter a valid number.");
                         }
                     } catch (Exception e) {
-
+                        System.out.println(e.getMessage());
                     }
                 }
+                break;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    public void viewRentalAgreements(){
+    public void viewRentalAgreements(HomeOwner owner){
         lineBr();
         System.out.println("--view your rental agreements-");
         //call manager method to show agreements
+        List<RentalAgreement> currentAgreements = rentalAgreementManager.agreementByHomeOwner(owner.getUserID());
+
+        if(currentAgreements.isEmpty()){
+            System.out.println("you have no current agreements");
+        }else{
+            for(RentalAgreement agreement: currentAgreements){
+                agreement.displayAgreement();
+            }
+        }
+    }
+    public int readInt(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: please enter a valid whole number.");
+            }
+        }
     }
 
     public void start(HomeOwner homeOwner){
         Boolean runStart = true;
         while(runStart){
-            displayHomeOwnerOptions();
+            //System.out.println(homeOwnerOptions());
             int menuDecision;
+            String decision;
             try {
-                menuDecision = scanner.nextInt();
-                scanner.nextLine();
+                menuDecision = readInt(homeOwnerOptions());
+                //scanner.nextLine();
 
                 switch (menuDecision) {
                     case 1:
@@ -374,7 +408,7 @@ public class HomeOwnerMenu{
                         manageRentalRequests(homeOwner);
                         break;
                     case 5:
-                        viewRentalAgreements();
+                        viewRentalAgreements(homeOwner);
                         break;
                     case 6:
                         runStart = false;               

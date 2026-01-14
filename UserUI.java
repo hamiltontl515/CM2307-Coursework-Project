@@ -20,12 +20,13 @@ public class UserUI{
         this.homeOwnerMenu = new HomeOwnerMenu(scanner, propertyManager, rentalRequestManager, rentalAgreementManager);
     }
 
-    public static void displayUserMenu(){
-        lineBr();
+    public String userMenu(){
+        /*lineBr();
         System.out.println("WELCOME TO STUDENT RENTALS");
         System.out.println("To log in press 1");
         System.out.println("To sign up press 2");
-        System.out.println("to exit press 3.");
+        System.out.println("to exit press 3.");*/
+        return "WELCOME TO STUDENT RENTALS\nto log in press 1\nto sign up press 2\nto exit press 3";
     }
 
     public static void lineBr(){
@@ -40,7 +41,7 @@ public class UserUI{
         String email = scanner.next();
         scanner.nextLine();
         System.out.print("Enter your password");
-        String password = scanner.next();
+        String password = scanner.nextLine();
 
         return userManager.login(email, password);
     }
@@ -51,9 +52,8 @@ public class UserUI{
         //student or homeowner
         int type;
         while(true){
-            System.out.print("please press 1 to sign up as a student, 2 to sign up as a homeowner:");
-            type = scanner.nextInt();
-            scanner.nextLine();
+            //System.out.print("please press 1 to sign up as a student, 2 to sign up as a homeowner:");
+            type = readInt("please press 1 to sign up as a student, 2 to sign up as a homeowner:");
             if(type == 1 || type == 2){
                 break;
             }else{
@@ -114,9 +114,9 @@ public class UserUI{
 
     public void start(){
         while (true) { 
-            displayUserMenu();
+            //System.out.println(userMenu());
             try {
-                int forwardTo = scanner.nextInt();
+                int forwardTo = readInt(userMenu());
                 
                 if(forwardTo == 1){
                     User user = logIn();
@@ -142,4 +142,17 @@ public class UserUI{
             }
         }
     }
+    public int readInt(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: please enter a valid whole number.");
+            }
+    }
+}
+
 }

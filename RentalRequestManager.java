@@ -24,8 +24,10 @@ public class RentalRequestManager{
         for(String roomId: roomIDs){
             List<RentalRequest> roomRequests = rentalRequestRepository.requestByRoom(roomId);
 
+
             if(!roomRequests.isEmpty()){
                 for(RentalRequest rentalRequest: roomRequests){
+                    //rentalRequest.displayRequest();
                     returnRequestIDs.add(rentalRequest);
                 }
             }
@@ -34,20 +36,23 @@ public class RentalRequestManager{
         return returnRequestIDs;
     }
 
-    public void onlyPendingRequests(List<RentalRequest> requests){
+    public List<RentalRequest> onlyPendingRequests(List<RentalRequest> requests){
+        List<RentalRequest> returnRequests = new ArrayList<>();
         for(RentalRequest request: requests){
-            if(!request.getRentalRequestStatus().equals(RentalRequestStatus.REQUESTED)){
-                requests.remove(request);
+            if(request.getRentalRequestStatus() == RentalRequestStatus.REQUESTED){
+                returnRequests.add(request);
             }
         }
+        return returnRequests;
     }
     public List<RentalRequest> stripOfOtherRoomIds(List<RentalRequest> requests, String roomID){
+        List<RentalRequest> returnRequests = new ArrayList<>();
         for(RentalRequest request: requests){
-            if(!request.getRequestRoom().getRoomID().equals(roomID)){
-                requests.remove(request);
+            if(request.getRequestRoom().getRoomID().equals(roomID)){
+                returnRequests.add(request);
             }
         }
-        return requests;
+        return returnRequests;
     }
     public void validateRequestID(List<RentalRequest> requests, String requestID){
         Boolean isIn = false;

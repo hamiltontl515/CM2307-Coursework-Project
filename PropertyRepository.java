@@ -32,12 +32,12 @@ public class PropertyRepository{
     }
 
     public String generatePropertyID(){
-        String paddedNum = String.format("%3d", propertyIndex);
+        String paddedNum = String.format("%03d", propertyIndex);
         propertyIndex ++;
         return "P".concat(paddedNum);
     }
     public String generateRoomID(){
-        String paddedNum = String.format("%3d", roomIndex);
+        String paddedNum = String.format("%03d", roomIndex);
         roomIndex++;
         return "Ro".concat(paddedNum);
     }

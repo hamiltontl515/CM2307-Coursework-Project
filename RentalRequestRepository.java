@@ -21,7 +21,7 @@ public class RentalRequestRepository{
     }
 
     public String generateRequestID(){
-        String paddedNum = String.format("%3d", repositoryIndex);
+        String paddedNum = String.format("%03d", repositoryIndex);
         repositoryIndex++;
         return "R".concat(paddedNum);
 

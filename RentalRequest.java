@@ -48,6 +48,9 @@ public class RentalRequest{
     public void setRequestBookingSlot(BookingSlot newRequestSlot){
         requestSlot = newRequestSlot;
     }
+    public void setRequestToAccepted(){
+        requestStatus = RentalRequestStatus.ACCEPTED;
+    }
 
     public void acceptRequest(){
         if(requestStatus == RentalRequestStatus.REQUESTED){
