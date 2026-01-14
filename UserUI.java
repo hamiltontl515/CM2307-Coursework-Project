@@ -21,6 +21,7 @@ public class UserUI{
     }
 
     public String userMenu(){
+        //this is the string of the display menu
         /*lineBr();
         System.out.println("WELCOME TO STUDENT RENTALS");
         System.out.println("To log in press 1");
@@ -35,6 +36,7 @@ public class UserUI{
 
     }
     public User logIn(){
+        //called by start this gets the users login details
         lineBr();
         System.out.println("------------LOG IN------------");
         System.out.print("Enter your email:");
@@ -47,9 +49,9 @@ public class UserUI{
     }
 
     public void signUp(){
+        //called by start this gets the users option for if they want to be a student or a homeowner
         lineBr();
         System.out.println("------------Sign Up-----------");
-        //student or homeowner
         int type;
         while(true){
             //System.out.print("please press 1 to sign up as a student, 2 to sign up as a homeowner:");
@@ -60,10 +62,10 @@ public class UserUI{
                 System.out.println("ERROR: please enter 1 for student or 2 for homeowner.");
             }
         }
-        // name
+        // gets the students name, catches the exception and repeats if invalid
         String name;
         while(true){
-            System.out.print("please enter your name:");
+            System.out.print("please enter your name, must be first name follwoed by last name:");
             name = scanner.nextLine();
             try {
                 userManager.nameValidator(name);      
@@ -72,7 +74,7 @@ public class UserUI{
                 System.out.println(e.getMessage());
             }
         }
-        // email
+        // gets the students enail, catches the exception and repeats loop if invalid
         String email;
         while(true){
             System.out.print("please enter your email:");
@@ -84,7 +86,7 @@ public class UserUI{
                 System.out.println(e.getMessage());
             }
         }
-        // password
+        // gets the users password, catches the error and repeats loop if invalid format
         String password;
         while(true){ 
             System.out.print("please enter your password, must be over 6 characters:");
@@ -99,12 +101,14 @@ public class UserUI{
 
         if(type == 1){
             try {
-                userManager.signUp("student", name, email, password);
+                //creates the student, catching exception if user already exists
+                userManager.signUp("student", name, email, password); 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }else{
             try {
+                //creates a homeowner, catching exception if user already exists, email must be different
                 userManager.signUp("homeowner", name, email, password);                
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -114,6 +118,7 @@ public class UserUI{
 
     public void start(){
         while (true) { 
+            //repeats until until exited by entering 3
             //System.out.println(userMenu());
             try {
                 int forwardTo = readInt(userMenu());
@@ -122,10 +127,10 @@ public class UserUI{
                     User user = logIn();
 
                     if (user instanceof Student) {
-                        studentMenu.start((Student) user);
+                        studentMenu.start((Student) user); // goes to a student menu with the student as the user
                     }else if(user instanceof HomeOwner){
                         //start homeowner menu
-                        homeOwnerMenu.start((HomeOwner) user);
+                        homeOwnerMenu.start((HomeOwner) user); // goes to a homeowner menu with honeowner as the user
                     }else if(user instanceof Admin){
                         //start admin menu
                     }
@@ -142,6 +147,8 @@ public class UserUI{
             }
         }
     }
+
+    //panic placed function to replace all instances of nextInt() I used that broke when entering a non int input, repeats prompt until valid input is given
     public int readInt(String prompt) {
         while (true) {
             System.out.println(prompt);

@@ -11,11 +11,12 @@ public class RentalAgreementManager{
         RentalAgreement newAgreement = new RentalAgreement(rentalAgreementRepository.generateAgreementID(), owner, student, room, rentalRequest.getRentalRequestBookingSlot());
         rentalAgreementRepository.addRentalAgreement(newAgreement);
     }
-
+    //returns a list of rental agreements a student has
     public List<RentalAgreement> agreementByStudent(String studentID){
         return rentalAgreementRepository.agreementByStudent(studentID);
     }
 
+    //returns a list of rental agreements a homeowner has
     public List<RentalAgreement> agreementByHomeOwner(String userID){
         return rentalAgreementRepository.agreementByHomeOwner(userID);
     }

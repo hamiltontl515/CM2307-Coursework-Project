@@ -22,8 +22,9 @@ public class StudentMenu{
 
     }
 
+    //returns string of menu options to be used in the readInt for start
     public String studentMenu(){
-        lineBr();
+        lineBr(); 
         /*System.out.println("--welcome to the student menu-");
         System.out.println("press 1 to search rooms");
         System.out.println("press 2 to look at rental requests");
@@ -33,34 +34,36 @@ public class StudentMenu{
         return "--welcome to the student menu-\npress 1 to search rooms\npress 2 to look at rental requests\npress 3 to make a rental request\npress 4 to look at rental agreements\npress 5 to log out";
     }
 
+    //this method gets the users inputs to search rooms and then performs search
     public void searchRooms(){
-        if (propertyManager == null) {
+        /*if (propertyManager == null) {
             throw new IllegalStateException("PropertyManager not initialised");
-        }
+        }*/
         lineBr();
         System.out.println("---------search rooms---------");
         System.out.println("universities we currently serve:");
 
-        List<String> unis = propertyManager.validUnis();
+        List<String> unis = propertyManager.validUnis(); //gets the universities that peroperties have
 
         if(unis.isEmpty()){
             System.out.println("ERROR: no universities currently added");
-            return;
+            return; // makes sure that if no universities added the method stops to save time
         }
         for(String uni: unis){
-            System.out.println(uni);
+            System.out.println(uni); // calls the manager to get and output all unis in property reposoitory
         }
         System.out.println("");
 
+        //gets the university input from user
         String university;
         while(true){
             System.out.println("enter the university you wish to search for:");
             university = scanner.nextLine();
             try {
-                propertyManager.validateUni(university);
+                propertyManager.validateUni(university); // makes sure entered uni is in propeperty repository
                 break;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()); // catches the exception if it is not and displays error, causing loop to repeat until correct input is given
             }
         }
 
@@ -69,30 +72,30 @@ public class StudentMenu{
         String endDate;
         LocalDate start = null;
         LocalDate end = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String dateRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // fate formatter to ensure consistent dd/mm/yyyy
+        String dateRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$"; //regex ensuring that entered date is dd-mm-yyyy
         Boolean carryOn = false;
-        while (!carryOn) { 
+        while (!carryOn) { //keeps repeating loop until a date is given
             //System.out.println("if you dont wish your search to include dates press 1, otherwise press 2:");
             try {
                 dateDecision = readInt("if you dont wish your search to include dates press 1, otherwise press 2:");
                 if(dateDecision==1){
                     start = null;
                     end = null;
-                    break;
+                    carryOn = true; // breaks out of loop if the uers does not wish to enter date restraint
                 }else if(dateDecision == 2){
                     while(true){
-                        System.out.println("Enter start date as DD-MM-YYYY:");
-                        startDate = scanner.nextLine();
+                        System.out.println("Enter start date as DD-MM-YYYY:"); 
+                        startDate = scanner.nextLine(); //get start date input from users, repeating until valid
                         try {
                             regexChecker(startDate, dateRegex);
                             start = LocalDate.parse(startDate, formatter);
                             System.out.println("Enter end date as DD-MM-YYYY");
-                            endDate = scanner.nextLine();
+                            endDate = scanner.nextLine(); // gets end date input from user, repeating until valid
                             try {
                                 regexChecker(endDate, dateRegex);
-                                end = LocalDate.parse(endDate, formatter);
-                                if(end.isBefore(start)){
+                                end = LocalDate.parse(endDate, formatter); 
+                                if(end.isBefore(start)){ // check that the start date is before the end date, repeating input if not true
                                     System.out.println("ERROR: end date must be after start date");
                                     //break;
                                 }else{
@@ -117,20 +120,20 @@ public class StudentMenu{
         int priceDecision;
         String pricePerWeek;
         Double price;
-        String priceRegex = "^\\d+\\.\\d{2}$";
+        String priceRegex = "^\\d+\\.\\d{2}$"; //price regex ensuring price is a number followed by a . follwed by 2 digit
         while(true){
             //System.out.println("If you do not wish to enter a price budget (per week), press 1, if not press 2");
             try {
-                priceDecision = readInt("If you do not wish to enter a price budget (per week), press 1, if not press 2");
+                priceDecision = readInt("If you do not wish to enter a price budget (per week), press 1, if not press 2"); //repeats the prompt until valid input given
                 if(priceDecision == 1){
                     price = null;
-                    break;
+                    break; // exits the loop if the user does not want to enter a price restricition
                 }else if(priceDecision == 2){
                     while (true) { 
                         System.out.println("please enter your price budget as pounds.pence");
                         pricePerWeek = scanner.nextLine();
                         try {
-                            regexChecker(pricePerWeek, priceRegex);
+                            regexChecker(pricePerWeek, priceRegex); // checks the entered string against the regex, repeating loop if invalid
                             
                             price = Double.parseDouble(pricePerWeek);
                             break;
@@ -145,7 +148,7 @@ public class StudentMenu{
             }
         }
 
-        displayRooms(university, start, end, price);
+        displayRooms(university, start, end, price); // calls the display rooms function later in the menu
 
     }
 
@@ -153,13 +156,13 @@ public class StudentMenu{
         lineBr();
         System.out.println("-------current requests-------");
 
-        List<RentalRequest> currentRequests = rentalRequestManager.requestsByStudent(student.getUserID());
+        List<RentalRequest> currentRequests = rentalRequestManager.requestsByStudent(student.getUserID()); //gets all requests from the student from the request manger
 
         if(currentRequests == null){
             System.out.println("you have no current requests");
         }else{
             for(RentalRequest request: currentRequests){
-                request.displayRequest();
+                request.displayRequest(); // iterates through list of requests outputting them
             }
         }
         
@@ -168,12 +171,12 @@ public class StudentMenu{
         lineBr();
         System.out.println("-------rental agreements------");
 
-        List<RentalAgreement> currentAgreements = rentalAgreementManager.agreementByStudent(student.getUserID());
+        List<RentalAgreement> currentAgreements = rentalAgreementManager.agreementByStudent(student.getUserID()); //gets all the requests from the student from the agreement manager
 
         if(currentAgreements.isEmpty()){
             System.out.println("you have no current agreements");
         }else{
-            for(RentalAgreement agreement: currentAgreements){
+            for(RentalAgreement agreement: currentAgreements){ //iterates through the request if there are any and outputs them
                 agreement.displayAgreement();
             }
         }
@@ -190,40 +193,42 @@ public class StudentMenu{
             System.out.println("please enter the room ID that you wish to book:");
             roomID = scanner.nextLine();
             try {
-                propertyManager.validateRoom(roomID);
-                propertyID = propertyManager.getPropertyIDByRoomID(roomID);
+                propertyManager.validateRoom(roomID); //validates room id is in property repository
+                propertyID = propertyManager.getPropertyIDByRoomID(roomID); //gets the property the room is in
                 break;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()); // loops back if invalid input given
             }
         }
-        Room proposedRoom = propertyManager.getProperty(propertyID).getRoom(roomID);
+        Room proposedRoom = propertyManager.getProperty(propertyID).getRoom(roomID); // stores the room
 
         //get booking slot
         String startDate;
         String endDate;
         LocalDate start;
         LocalDate end;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String dateRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // date fromatter for dd/mm/yyyy
+        String dateRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$"; // date regex from dd/mm/yyy seperated by hyphens
         while(true){
+            //gets the start date
             System.out.println("Enter start date as DD-MM-YYYY:");
-            startDate = scanner.nextLine();
+            startDate = scanner.nextLine(); 
             try {
-                regexChecker(startDate, dateRegex);
+                regexChecker(startDate, dateRegex); //validates the date before making the localdate, loops if invalid
                 start = LocalDate.parse(startDate, formatter);
+                //get the end date
                 System.out.println("Enter end date as DD-MM-YYYY");
                 endDate = scanner.nextLine();
                 try {
-                    regexChecker(endDate, dateRegex);
+                    regexChecker(endDate, dateRegex); //validates the end date before making localdate, loops if invalid
                     end = LocalDate.parse(endDate, formatter);
                     if(end.isBefore(start)){
-                        System.out.println("ERROR: end date must be after start date");
+                        System.out.println("ERROR: end date must be after start date"); // checls the start date is before the end date, loops if invalid
                         break;
                     }
-                    if(proposedRoom.checkAvailability(start, end)){
+                    if(proposedRoom.checkAvailability(start, end)){ // if the room is available at the time given
                         //make request
-                        rentalRequestManager.createRequest(student, proposedRoom, start, end);
+                        rentalRequestManager.createRequest(student, proposedRoom, start, end); // create the new rental request
                         System.out.println("SUCCESS: Request added.");
                         break;
                     }else{
@@ -240,16 +245,18 @@ public class StudentMenu{
         
     }
 
+    //called bys search rooms , just handles the outputting of the rooms
     public void displayRooms(String university, LocalDate start, LocalDate end, Double price){
-        List<Room> availableRooms = propertyManager.roomSearch(university, start, end, price);
+        List<Room> availableRooms = propertyManager.roomSearch(university, start, end, price); // gets the list of matching rooms
 
         if(availableRooms.isEmpty()){
-            System.out.println("ERROR: no rooms match your requirements.");
+            System.out.println("ERROR: no rooms match your requirements."); // catches if the list is empty
+            return;
         }
 
         for(Room room : availableRooms){
             lineBr();
-            room.displayRoom();
+            room.displayRoom(); //loops through returned rooms and outputsthem
         }
     }
 
@@ -260,7 +267,7 @@ public class StudentMenu{
             //System.out.println(studentMenu());
             int menuDecision;
             try {
-                menuDecision = readInt(studentMenu());
+                menuDecision = readInt(studentMenu()); // repeats the menu prompt until a valid input is given
                 if(menuDecision == 1){
                     searchRooms();
                 }else if(menuDecision == 2){
@@ -284,6 +291,7 @@ public class StudentMenu{
             throw new IllegalArgumentException("EROR: wrong date format");
         }
     }
+    //panic placed function to replace all instances of nextInt() I used that broke when entering a non int input, repeats prompt until valid input is given
     public int readInt(String prompt) {
         while (true) {
             System.out.println(prompt);

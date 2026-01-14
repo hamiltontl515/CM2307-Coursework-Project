@@ -9,7 +9,7 @@ public class Main{
     private static RentalRequestRepository requestrepo = new RentalRequestRepository();
     private static RentalAgreementRepository agreementrepo = new RentalAgreementRepository();
     public static void main(String[] args) {
-        //create some sample students and homeowners
+        //create some sample students and homeowners, properties, rooms, rental requests, rental agreements for video demo
         User user1 = UserFactory.createUser("student", "U001", "Tim Tim", "tim@unimail.com", "123456");
         User user2 = UserFactory.createUser("student", "U002", "Adam Adam", "adam@unimail.com", "123456");
         User user3 = UserFactory.createUser("student", "U003", "Steve Marley", "steve@unimail.com", "123456");
@@ -115,7 +115,8 @@ public class Main{
        RentalRequestManager requestManager = new RentalRequestManager(requestrepo);
        RentalAgreementManager agreementManager = new RentalAgreementManager(agreementrepo);
        UserUI userUI = new UserUI(userManager, scanner, propertyManager, requestManager, agreementManager);
-
+       
+       //starts the program
        userUI.start();
        scanner.close();
     }

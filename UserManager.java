@@ -43,16 +43,21 @@ public class UserManager{
         }
     }
 
+    //this makes sure that the users email is at a valid format and throws an exception if not
     public void emailValidator(String email){
         if(email == null || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")){ //regex that enforces email format, not starting in @, containing an @ and a . for .com, .co.uk etc.
             throw new IllegalArgumentException("ERROR: email formatting incorrect");
         }
     }
+
+    //this makes sure that the users name is two words, no numbers. throws exception if not
     public void nameValidator(String name){
-        if(name == null || !name.matches("^[A-Za-z]+ [A-Za-z]+$")){
+        if(name == null || !name.matches("^[A-Za-z]+ [A-Za-z]+$")){ // regex to enforce two words, no numbers
             throw new IllegalArgumentException("ERROR: name format incorrect");
         }
     }
+
+    //this makes sure tat the users password if over 6 characters and throws exception if incorrect
     public void passwordValidator(String password){
         if(password == null || password.length() < 6){
             throw new IllegalArgumentException("ERROR: password must be over 6 characters");
@@ -61,17 +66,17 @@ public class UserManager{
 
     //create a homeowner
     public void addNewHomeOwner(String name, String email, String password){
-        User newHomeOwner = UserFactory.createUser("homeowner", userRepo.generateUserID(), name, email, password);
+        User newHomeOwner = UserFactory.createUser("homeowner", userRepo.generateUserID(), name, email, password); //uses user factory to make new homeowner
         userRepo.AddUser(newHomeOwner);
     }
     //create a student
     public void addNewStudent(String name, String email, String password){
-        User newStudent = UserFactory.createUser("student", userRepo.generateUserID(), name, email, password);
+        User newStudent = UserFactory.createUser("student", userRepo.generateUserID(), name, email, password);// uses user factory to make new student
         userRepo.AddUser(newStudent);
     }
     //create an admin
     public void addNewAdmin(String name, String email, String password){
-        User newAdmin = UserFactory.createUser("admin", userRepo.generateUserID(), name, email, password);
+        User newAdmin = UserFactory.createUser("admin", userRepo.generateUserID(), name, email, password); // uses the factory method to make new admin
         userRepo.AddUser(newAdmin);
     }
     //delete a user

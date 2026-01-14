@@ -52,6 +52,7 @@ public class RentalRequest{
         requestStatus = RentalRequestStatus.ACCEPTED;
     }
 
+    //changes the requests to accepted if only if it is currently requested
     public void acceptRequest(){
         if(requestStatus == RentalRequestStatus.REQUESTED){
             requestStatus = RentalRequestStatus.ACCEPTED;
@@ -59,6 +60,7 @@ public class RentalRequest{
             System.out.println("Request status already accepted/denied");
         }
     }
+    //changes the requests staus to denied only if the requests status is requested
     public void denyRequest(){
         if(requestStatus == RentalRequestStatus.REQUESTED){
             requestStatus = RentalRequestStatus.DENIED;
@@ -67,7 +69,7 @@ public class RentalRequest{
         }
     }
 
-
+    //outputs the request in nice format
     public void displayRequest(){
         System.out.println("Request ID:"+ requestID);
         System.out.println("Request Room ID:" + requestRoom.getRoomID());

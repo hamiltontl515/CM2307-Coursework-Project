@@ -14,12 +14,15 @@ public class RentalAgreementRepository{
     public void addRentalAgreement(RentalAgreement newRentalAgreement){
         agreementsID.put(newRentalAgreement.getRentalAgreementID(), newRentalAgreement);
     }
+
+    //creates a new index for a new rental agreemnet
     public String generateAgreementID(){
-        String paddedNum = String.format("%03d", agreementIndex);
+        String paddedNum = String.format("%03d", agreementIndex); // pads with extra zeros so that its 3 digits long
         agreementIndex ++;
         return "A".concat(paddedNum);
     }
 
+    //returns list of agreements a student user has
     public List<RentalAgreement> agreementByStudent(String userID){
         List<RentalAgreement> returnAgreements = new ArrayList<>();
         for(RentalAgreement agreement: agreementsID.values()){
@@ -29,6 +32,7 @@ public class RentalAgreementRepository{
         }
         return returnAgreements;
     }
+    //returns a list of agreements thet a homeowner user has
     public List<RentalAgreement> agreementByHomeOwner(String userID){
         List<RentalAgreement> returnAgreements = new ArrayList<>();
         for(RentalAgreement agreement: agreementsID.values()){

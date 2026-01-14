@@ -28,6 +28,7 @@ public class RentalAgreement{
         return agreementSlot;
     }
 
+    //displays the rental agreement
     public void displayAgreement(){
         System.out.println("Agreement ID:"+agreementID);
         System.out.println("Agreement room ID:"+ agreementRoom.getRoomID());

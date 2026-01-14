@@ -29,7 +29,7 @@ public class BookingSlot{
     public Boolean checkOverlap(LocalDate otherStartDate, LocalDate otherEndDate){
         return !(otherEndDate.isBefore(startDate)|| otherStartDate.isAfter(endDate));
     }
-
+    //returns a string of the start and end date for outpur
     public String bookingSlotString(){
         return "From:"+startDate+"to:"+endDate;
     }
