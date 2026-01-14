@@ -18,6 +18,10 @@ public class UserManager{
         return user;
     }
 
+    public Student getStudent(String studentID){
+        return (Student)userRepo.getUser(studentID);
+    }
+
     //allows a user to sign up to the service, checking that the email suppplied isn't already used.
     public void signUp(String usertype, String name, String email, String password){
         if(userRepo.userEmailInRepo(email) == null){

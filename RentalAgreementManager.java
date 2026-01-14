@@ -1,5 +1,4 @@
 import java.util.*;
-import java.time.LocalDate;
 
 public class RentalAgreementManager{
     private RentalAgreementRepository rentalAgreementRepository;
@@ -8,8 +7,9 @@ public class RentalAgreementManager{
         this.rentalAgreementRepository = rentalAgreementRepository;
     }
     //for a homeowner to accept a rental request and create a rental agreement
-    public void acceptRentalAgreement(RentalRequest rentalRequest){
-                
+    public void addNewAgreement(RentalRequest rentalRequest, HomeOwner owner, Student student, Room room){
+        RentalAgreement newAgreement = new RentalAgreement(rentalAgreementRepository.generateAgreementID(), owner, student, room, rentalRequest.getRentalRequestBookingSlot());
+        rentalAgreementRepository.addRentalAgreement(newAgreement);
     }
 
     public List<RentalAgreement> agreementByStudent(String studentID){

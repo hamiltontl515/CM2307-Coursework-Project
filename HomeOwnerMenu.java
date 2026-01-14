@@ -1,6 +1,5 @@
-import java.util.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class HomeOwnerMenu{
     private Scanner scanner;
@@ -29,7 +28,7 @@ public class HomeOwnerMenu{
         System.out.println("press 3 to view rental requests");
         System.out.println("press 4 to manage a rental request");
         System.out.println("press 5 to view rental agreements");
-        System.out.println("press 5 to log out");
+        System.out.println("press 6 to log out");
 
     }
     public void addProperty(HomeOwner homeOwner){
@@ -60,6 +59,7 @@ public class HomeOwnerMenu{
                     System.out.println("would you like to add rooms to your property?enter 1 for yes, 2 for no");
                     try {
                         roomDecision = scanner.nextInt();
+                        scanner.nextLine();
                         if(roomDecision == 1){
                             //go to add room to property method
                             addRoomsToProperty(PropertyID);
@@ -233,18 +233,116 @@ public class HomeOwnerMenu{
         }
     }
 
-    public void viewRentalRequests(){
+    public void viewRentalRequests(HomeOwner owner){
         lineBr();
         System.out.println("--view your current requests--");
         //call manager method to show rental requests
+
+        List<String> ownersRooms = propertyManager.roomIDsByHomeOwnerID(owner.getUserID());
+
+        if(ownersRooms.isEmpty()){
+            System.out.println("ERROR: you have no propertys with rooms");
+            return;
+        }
+        
+        List<RentalRequest> ownersRoomsRequests = rentalRequestManager.anyRequests(ownersRooms);
+        if(ownersRoomsRequests.isEmpty()){
+            System.out.println("ERROR: your property rooms have no rental requests");
+            return;
+        }
+
+        System.out.println("your current requests:");
+        for(RentalRequest request: ownersRoomsRequests){
+            request.displayRequest();
+        }
     }
 
-    public void manageRentalRequests(){
+    public void manageRentalRequests(HomeOwner owner){
         lineBr();
         System.out.println("-manage your current requests-");
+        //check if the homeowner first has any requests
+        List<String> ownersRooms = propertyManager.roomIDsByHomeOwnerID(owner.getUserID());
+
+        if(ownersRooms.isEmpty()){
+            System.out.println("ERROR: you have no propertys with rooms");
+            return;
+        }
+        
+        List<RentalRequest> ownersRoomsRequests = rentalRequestManager.anyRequests(ownersRooms);
+        if(ownersRoomsRequests.isEmpty()){
+            System.out.println("ERROR: your property rooms have no rental requests");
+            return;
+        }
+        //takes away any accepted or denied requests
+        rentalRequestManager.onlyPendingRequests(ownersRoomsRequests);
+        
+        //list of visitied rooms
+        List<String> visitedRooms = new ArrayList<>();
+
+        for(int i=0;i>ownersRoomsRequests.size();i++){
+            if(visitedRooms.contains(ownersRoomsRequests.get(i).getRequestRoom().getRoomID())){
+                return;
+            }
+            String visitingRoom = ownersRoomsRequests.get(i).getRequestRoom().getRoomID();
+            visitedRooms.add(visitingRoom);
+
+            List<RentalRequest> ownersRoomsCopy = ownersRoomsRequests;
+
+            List<RentalRequest> requestsSameRoom = rentalRequestManager.stripOfOtherRoomIds(ownersRoomsCopy, visitingRoom);
+            
+            manageRequestsByRoom(requestsSameRoom, visitingRoom, owner);
+        }
         //present options and get inout
         //validate input
         // action: accept/deny
+    }
+    public void manageRequestsByRoom(List<RentalRequest> requests, String visitingRoom, HomeOwner owner){
+        System.out.println("requests on room:"+ visitingRoom);
+        for(RentalRequest request: requests){
+            request.displayRequest();
+        }
+        String manageID;
+        while (true) { 
+            System.out.println("enter the request ID of the request you wish to manage:");
+            manageID = scanner.nextLine();
+            try {
+                rentalRequestManager.validateRequestID(requests, manageID);
+
+                int requestAction;
+                while (true) { 
+                    System.out.println("enter 1 to accpet request, 2 to deny request, 3 to cancel");
+                    try {
+                        requestAction = scanner.nextInt();
+                        if(requestAction == 1){
+                            //accept request
+                            RentalRequest acceptedRequest = rentalRequestManager.getRequest(manageID);
+                            acceptedRequest.acceptRequest();
+                            rentalAgreementManager.addNewAgreement(acceptedRequest, owner, acceptedRequest.getRequestStudent(), acceptedRequest.getRequestRoom() );
+                            //cdenying any overlapping slots
+                            BookingSlot acceptedSlot = acceptedRequest.getRentalRequestBookingSlot();
+                            for(RentalRequest request: requests){
+                                if(!request.getRequestID().equals(manageID)){
+                                    if(rentalRequestManager.checkConflict(request.getRentalRequestBookingSlot(), acceptedRequest.getRentalRequestBookingSlot())){
+                                        rentalRequestManager.denyRequest(request.getRequestID());
+                                    }
+                                }
+                            }
+                        }else if(requestAction == 2){
+                            //deny request
+                            rentalRequestManager.denyRequest(manageID);
+                        }else if(requestAction == 3){
+                            break;
+                        }else{
+                            System.out.println("ERROR: Enter a valid number.");
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     public void viewRentalAgreements(){
@@ -253,7 +351,7 @@ public class HomeOwnerMenu{
         //call manager method to show agreements
     }
 
-    public void start(HomeOwner homeHomowner){
+    public void start(HomeOwner homeOwner){
         Boolean runStart = true;
         while(runStart){
             displayHomeOwnerOptions();
@@ -264,16 +362,16 @@ public class HomeOwnerMenu{
 
                 switch (menuDecision) {
                     case 1:
-                        addProperty(homeHomowner);
+                        addProperty(homeOwner);
                         break;
                     case 2:
-                        addRoom(homeHomowner);
+                        addRoom(homeOwner);
                         break;
                     case 3:
-                        viewRentalRequests();
+                        viewRentalRequests(homeOwner);
                         break;
                     case 4:
-                        manageRentalRequests();
+                        manageRentalRequests(homeOwner);
                         break;
                     case 5:
                         viewRentalAgreements();

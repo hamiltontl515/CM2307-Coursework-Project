@@ -1,6 +1,6 @@
-import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class PropertyManager{
     private PropertyRepository propertyRepo;
@@ -19,6 +19,22 @@ public class PropertyManager{
 
     public List<String> propertyIdsByHomeownerID(String homeOwnerID){
         return propertyRepo.propertyIdsByHomeOwnerID(homeOwnerID);
+    }
+
+    public List<String> roomIDsByHomeOwnerID(String ownerID){
+        List<String> propertyIDs = propertyIdsByHomeownerID(ownerID);
+
+        List<String> roomIDs = new ArrayList<>();
+
+        for(String propertyID: propertyIDs){
+            List<Room> propertyRooms = propertyRepo.getPropertyByID(propertyID).getRooms();
+            if(!propertyRooms.isEmpty()){
+                for(Room room: propertyRooms){
+                    roomIDs.add(room.getRoomID());
+                }
+            }
+        }
+        return propertyIDs;
     }
 
     public void displayHomeownersPropertyIDs(String ownerID){

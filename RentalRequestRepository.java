@@ -1,5 +1,4 @@
 import java.util.*;
-import java.time.LocalTime;
 
 public class RentalRequestRepository{
     private HashMap<String, RentalRequest> requestsID = new HashMap<>();
@@ -16,6 +15,9 @@ public class RentalRequestRepository{
     public void addRequest(RentalRequest newRequest){
         requestsID.put(newRequest.getRequestID(), newRequest);
         repositoryIndex =0;
+    }
+    public RentalRequest getRequest(String id){
+        return requestsID.get(id);
     }
 
     public String generateRequestID(){

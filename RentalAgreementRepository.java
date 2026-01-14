@@ -2,9 +2,22 @@ import java.util.*;
 
 public class RentalAgreementRepository{
     private HashMap<String, RentalAgreement> agreementsID = new HashMap<>();
+    private int agreementIndex;
+
+    public RentalAgreementRepository(){
+        agreementIndex =0;
+    }
+    public void setAgreementIndex(int index){
+        agreementIndex = index;
+    }
 
     public void addRentalAgreement(RentalAgreement newRentalAgreement){
         agreementsID.put(newRentalAgreement.getRentalAgreementID(), newRentalAgreement);
+    }
+    public String generateAgreementID(){
+        String paddedNum = String.format("%3d", agreementIndex);
+        agreementIndex ++;
+        return "A".concat(paddedNum);
     }
 
     public List<RentalAgreement> agreementByStudent(String userID){
